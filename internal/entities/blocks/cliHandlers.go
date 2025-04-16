@@ -1,6 +1,7 @@
 package blocks
 
 import (
+	"RedisLike/internal/entities/transaction"
 	"flag"
 	"fmt"
 	"os"
@@ -12,8 +13,12 @@ func (cli *CLI) Run(args []string) {
 
 	addBlockCmd := flag.NewFlagSet("addblock", flag.ExitOnError)
 	printChainCmd := flag.NewFlagSet("printchain", flag.ExitOnError)
+	getBalanceCmd := flag.NewFlagSet("getbalance", flag.ExitOnError)
 
-	addBlockData := addBlockCmd.String("data", "", "Block data")
+	getBalanceAddress := getBalanceCmd.String("address", "", "Endereço para checar o saldo")
+
+	var transactionObj []*transaction.Transaction
+	addBlockData := addBlockCmd.String("address", "", "Block data")
 
 	switch args[0] {
 	case "addblock":
@@ -23,6 +28,11 @@ func (cli *CLI) Run(args []string) {
 		}
 	case "printchain":
 		err := printChainCmd.Parse(args[1:])
+		if err != nil {
+			panic(err)
+		}
+	case "getbalance":
+		err := getBalanceCmd.Parse(args[1:])
 		if err != nil {
 			panic(err)
 		}
@@ -36,11 +46,19 @@ func (cli *CLI) Run(args []string) {
 			addBlockCmd.Usage()
 			return
 		}
-		cli.addBlock(*addBlockData)
+		cli.addBlock(transactionObj)
 	}
 
 	if printChainCmd.Parsed() {
 		cli.printChain()
+	}
+
+	if getBalanceCmd.Parsed() {
+		if *getBalanceAddress == "" {
+			getBalanceCmd.Usage()
+			return
+		}
+		cli.getBalance(*getBalanceAddress)
 	}
 }
 
@@ -51,8 +69,8 @@ func (cli *CLI) validateArgs(args []string) {
 	}
 }
 
-func (cli *CLI) addBlock(data string) {
-	cli.Bc.AddBlock(data)
+func (cli *CLI) addBlock(transactions []*transaction.Transaction) {
+	cli.Bc.AddBlock(transactions)
 	fmt.Println("Success!")
 }
 
@@ -63,7 +81,7 @@ func (cli *CLI) printChain() {
 		block := bci.Next()
 
 		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Data: %s\n", block.Transactions)
 		fmt.Printf("Hash: %x\n", block.Hash)
 		pow := NewProofOfWork(block)
 		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
@@ -77,6 +95,20 @@ func (cli *CLI) printChain() {
 
 func (cli *CLI) printUsage() {
 	fmt.Println("Uso:")
-	fmt.Println("  addblock -data BLOCK_DATA  -> adiciona um bloco à blockchain")
+	fmt.Println("  addblock -address BLOCK_DATA  -> adiciona um bloco à blockchain")
 	fmt.Println("  printchain                 -> imprime todos os blocos da blockchain")
+}
+
+func (cli *CLI) getBalance(address string) {
+	bc := CreateBlockchain(address)
+	defer bc.Db.Close()
+
+	balance := 0
+	UTXOs := bc.FindUTXO(address)
+
+	for _, out := range UTXOs {
+		balance += out.Value
+	}
+
+	fmt.Printf("Balance of '%s': %d\n", address, balance)
 }

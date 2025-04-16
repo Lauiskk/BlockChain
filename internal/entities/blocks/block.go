@@ -1,6 +1,7 @@
 package blocks
 
 import (
+	"RedisLike/internal/entities/transaction"
 	"bytes"
 	"encoding/gob"
 	"github.com/boltdb/bolt"
@@ -21,12 +22,11 @@ type BlockchainIterator struct {
 }
 type Block struct {
 	Timestamp     int64
-	Data          []byte
+	Transactions  []*transaction.Transaction
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
 }
-
 type CLI struct {
 	Bc *Blockchain
 }
