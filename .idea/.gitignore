@@ -1,0 +1,43 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Diretórios de build e binários
+bin/
+out/
+build/
+
+# Arquivos binários gerados
+*.exe
+*.exe~
+*.test
+*.out
+
+# Arquivos específicos do projeto
+blockchain_go
+dbFile
+dbFile.lock
+
+# Arquivos de configuração e de ambiente
+.env
+*.yaml
+*.xml
+
+# Arquivos de configuração da IDE
+*.iml
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários e backup
+*~
+*.bak
+*.swp
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
