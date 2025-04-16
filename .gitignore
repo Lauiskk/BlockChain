@@ -1,15 +1,35 @@
-/bin/
-/out/
-/build/
-/*.exe
-/*.exe~
-/*.test
-/*.out
+# Diretórios de build e binários
+bin/
+out/
+build/
+
+# Arquivos binários gerados
+*.exe
+*.exe~
+*.test
+*.out
+
+# Arquivos específicos do projeto
 blockchain_go
 dbFile
 dbFile.lock
-.gitignore
+
+# Arquivos de configuração e de ambiente
 .env
-.yaml
-.xml
-.iml
+*.yaml
+*.xml
+
+# Arquivos de configuração da IDE
+*.iml
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários e backup
+*~
+*.bak
+*.swp
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
