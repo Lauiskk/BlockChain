@@ -2,6 +2,8 @@
 bin/
 out/
 build/
+.idea/
+
 
 # Arquivos binários gerados
 *.exe
