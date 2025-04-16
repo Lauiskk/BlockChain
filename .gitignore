@@ -1,0 +1,15 @@
+/bin/
+/out/
+/build/
+/*.exe
+/*.exe~
+/*.test
+/*.out
+blockchain_go
+dbFile
+dbFile.lock
+.gitignore
+.env
+.yaml
+.xml
+.iml
